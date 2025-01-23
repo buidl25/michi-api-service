@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing source NPM dependencies...
+      - npm install -g @nestjs/cli
+      - npm install
+  pre_build:
+    commands:
+      - echo Generating Prisma client...
+      - npx prisma generate
+      - echo Setting up service-specific Procfile
+      - "echo web: npm run start-processing:prod > Procfile"
+      - cat Procfile
+  build:
+    commands:
+      - echo Build started on `date`
+      - nest build michi-processing-service
+artifacts:
+  files:
+    - 'dist/apps/michi-processing-service/**/*'
+    - 'package.json'
+    - 'Procfile'
+    - 'prisma/**/*'
+    - '.ebextensions/**/*'
+    - '.platform/**/*'
+  base-directory: './'

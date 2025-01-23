@@ -1,0 +1,13 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../../..",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@app/config/abi/(.*)$": "<rootDir>/libs/config/src/abi/$1",
+    "^@app/(.*)$": "<rootDir>/libs/$1/src"
+  }
+}

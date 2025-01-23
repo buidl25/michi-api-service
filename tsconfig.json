@@ -1,0 +1,96 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
+    "paths": {
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/moralis": [
+        "libs/moralis/src"
+      ],
+      "@app/moralis/*": [
+        "libs/moralis/src/*"
+      ],
+      "@app/db": [
+        "libs/db/src"
+      ],
+      "@app/db/*": [
+        "libs/db/src/*"
+      ],
+      "@app/constants": [
+        "libs/constants/src"
+      ],
+      "@app/constants/*": [
+        "libs/constants/src/*"
+      ],
+      "@app/config": [
+        "libs/config/src"
+      ],
+      "@app/config/*": [
+        "libs/config/src/*"
+      ],
+      "@app/models": [
+        "libs/models/src"
+      ],
+      "@app/models/*": [
+        "libs/models/src/*"
+      ],
+      "@app/utils": [
+        "libs/utils/src"
+      ],
+      "@app/utils/*": [
+        "libs/utils/src/*"
+      ],
+      "@app/tokenbound": [
+        "libs/tokenbound/src"
+      ],
+      "@app/tokenbound/*": [
+        "libs/tokenbound/src/*"
+      ],
+      "@app/3pp": [
+        "libs/3pp/src"
+      ],
+      "@app/3pp/*": [
+        "libs/3pp/src/*"
+      ],
+      "@app/evm-reader": [
+        "libs/evm-reader/src"
+      ],
+      "@app/evm-reader/*": [
+        "libs/evm-reader/src/*"
+      ],
+      "@app/s3": [
+        "libs/s3/src"
+      ],
+      "@app/s3/*": [
+        "libs/s3/src/*"
+      ],
+      "@app/event-handler": [
+        "libs/event-handler/src"
+      ],
+      "@app/event-handler/*": [
+        "libs/event-handler/src/*"
+      ]
+    }
+  }
+}

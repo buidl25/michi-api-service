@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderType {
+  BID
+  LISTING
+}
+
+model ThirdPartyPoints {
+  id        Int      @id @default(autoincrement())
+  address   String
+  platform  String
+  points    Decimal  @db.Decimal(60, 5)
+  el_points Decimal  @db.Decimal(60, 5)
+  stale_at  DateTime
+
+  @@unique([address, platform])
+  @@map("third_party_points")
+}
+
+model Token {
+  id                     Int           @id @default(autoincrement())
+  chain_id               String
+  address                String?
+  address_label          String?
+  name                   String?
+  symbol                 String?
+  decimals               Int?
+  logo                   String?
+  logo_hash              String?
+  thumbnail              String?
+  block_number           Int?
+  total_supply           String?
+  total_supply_formatted String?
+  validated              Int?
+  created_at             DateTime?
+  possible_spam          Boolean?
+  verified_contract      Boolean?
+  WalletToken            WalletToken[]
+
+  @@unique([address, chain_id])
+  @@map("tokens")
+}
+
+model AncillaryToken {
+  id                     Int       @id @default(autoincrement())
+  chain_id               String
+  address                String?
+  address_label          String?
+  name                   String?
+  symbol                 String?
+  decimals               Int?
+  logo                   String?
+  logo_hash              String?
+  thumbnail              String?
+  block_number           Int?
+  total_supply           String?
+  total_supply_formatted String?
+  validated              Int?
+  created_at             DateTime?
+  possible_spam          Boolean?
+  verified_contract      Boolean?
+
+  @@unique([address, chain_id])
+  @@map("ancillary_tokens")
+}
+
+model WalletToken {
+  id                   Int      @id @default(autoincrement())
+  chain_id             String
+  wallet_address       String
+  token_address        String
+  balance              Decimal  @db.Decimal(78, 0)
+  eligible_balance     Decimal  @db.Decimal(78, 0)
+  stale_at             DateTime
+  token                Token    @relation(fields: [token_address, chain_id], references: [address, chain_id])
+  has_accrued_interest Boolean?
+
+  @@unique([wallet_address, token_address, chain_id])
+  @@map("wallet_tokens")
+}
+
+model MichiWallet {
+  id             Int      @id @default(autoincrement())
+  chain_id       String
+  nft_index      Int
+  wallet_address String
+  owner_address  String
+  stale_at       DateTime
+  user           User     @relation(fields: [owner_address, chain_id], references: [address, chain_id])
+  orders         Order[]  @relation("OrderWallet")
+  sales          Sale[]   @relation("SaleWallet")
+
+  @@unique([wallet_address, chain_id])
+  @@unique([nft_index, chain_id])
+  @@map("michi_wallets")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  chain_id     String
+  address      String
+  michi_points Decimal       @db.Decimal(60, 2)
+  MichiWallet  MichiWallet[]
+  Account      Account?      @relation(fields: [account_id], references: [id])
+  account_id   Int?
+  nonce        Int           @default(0)
+  buyer_sales  Sale[]        @relation("SaleBuyer")
+  seller_Sales Sale[]        @relation("SaleSeller")
+
+  @@unique([chain_id, address])
+  @@map("users")
+}
+
+model Account {
+  id           Int       @id @default(autoincrement())
+  address      String
+  affiliate_id String?
+  referrer     Account?  @relation("AccountReferrer", fields: [referrer_id], references: [id])
+  referrer_id  Int?
+  referred     Account[] @relation("AccountReferrer")
+  users        User[]
+
+  @@unique([address])
+  @@map("accounts")
+}
+
+model Order {
+  id                        Int       @id @default(autoincrement())
+  type                      OrderType
+  collection                String
+  currency                  String
+  participant               String
+  chainId                   String    @map("chain_id")
+  tokenId                   Int       @map("token_id")
+  amount                    Decimal   @db.Decimal(78, 0)
+  expiry                    DateTime
+  date                      DateTime  @default(now())
+  nonce                     Int
+  signature                 String
+  status                    String
+  pending_cancellation_date DateTime?
+  isStale                   Boolean   @default(false) @map("is_stale")
+
+  wallet MichiWallet @relation("OrderWallet", fields: [chainId, tokenId], references: [chain_id, nft_index])
+
+  @@unique([participant, nonce, chainId])
+  @@map("orders")
+}
+
+model Sale {
+  id            Int      @id @default(autoincrement())
+  collection    String
+  currency      String
+  buyerAddress  String   @map("buyer_address")
+  sellerAddress String   @map("seller_address")
+  chainId       String   @map("chain_id")
+  tokenId       Int      @map("token_id")
+  amount        Decimal  @db.Decimal(78, 0)
+  date          DateTime
+  points        Json
+
+  wallet MichiWallet @relation("SaleWallet", fields: [chainId, tokenId], references: [chain_id, nft_index])
+  buyer  User        @relation("SaleBuyer", fields: [chainId, buyerAddress], references: [chain_id, address])
+  seller User        @relation("SaleSeller", fields: [chainId, sellerAddress], references: [chain_id, address])
+
+  @@map("sales")
+}
+
+model ProcessedMoralisEvent {
+  id          String
+  received_at DateTime @default(now())
+
+  @@unique([id])
+  @@map("processed_moralis_events")
+}
+
+model LastPointsProcessingTime {
+  chain_id             String
+  last_processing_time DateTime
+
+  @@unique([chain_id])
+  @@map("last_points_processing_time")
+}
+
+model JobHistory {
+  job_name             String
+  chain_id             String
+  last_processing_time DateTime
+
+  @@unique([job_name, chain_id])
+  @@map("job_history")
+}
+
+model StakingInfo {
+  id            Int      @id @default(autoincrement())
+  walletAddress String
+  chain_id     String
+  stakedAmount  BigInt
+  lastUpdatedAt DateTime
+
+  @@unique([chain_id, walletAddress], name: "chain_id_walletAddress")
+  @@map("staking_info")
+}

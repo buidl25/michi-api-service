@@ -1,0 +1,55 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "tokenAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "walletAddresses",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "checkERC20Balances",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ]
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "nftAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "startTokenId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "endTokenId",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "checkERC721Owners",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "",
+                "type": "address[]"
+            }
+        ]
+    }
+]
