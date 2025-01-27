@@ -21,6 +21,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "db:deploy": "prisma migrate deploy", 
+    "init-migration": "npx prisma migrate dev --name init",
+    "apply-init-migration": "prisma migrate resolve --applied 0_init",
+    "prisma-validate": "prisma validate && prisma format",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma db push --force-reset",
+    "db-alter": "npm run prisma-validate && npx prisma migrate dev",
     "pretest:e2e": "ts-node ./scripts/setup-test-db.ts",
     "test:start-api:e2e": "dotenv -e .env.test -- jest --config ./apps/michi-api-service/test/jest-e2e.json",
     "test:start-api:debug": "dotenv -e .env.test -- node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --config ./apps/michi-api-service/test/jest-e2e.json"
